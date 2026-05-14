@@ -463,9 +463,8 @@ searchInput.addEventListener('input', (e) => {
     productList.innerHTML = "";
     filtrados.forEach(p => {
         const div = document.createElement('div');
-        div.style.padding = "15px";
-        div.style.borderBottom = "1px solid #eee";
-        div.innerHTML = `<span style="color:#007bff; font-weight:bold;">${p.codigo}</span><br><span style="color:#333;">${p.descripcion}</span> <span style="color:#28a745; font-weight:bold;">[UxB: ${p.unidades_x_bulto}]</span>`;
+        div.className = 'product-item';
+        div.innerHTML = `<span class="product-code">${p.codigo}</span><span class="product-desc">${p.descripcion}</span><span class="u-x-b">[UxB: ${p.unidades_x_bulto}]</span>`;
         div.onclick = () => {
             selectedProductName.textContent = p.descripcion;
             selectedProductName.dataset.codigo = p.codigo;

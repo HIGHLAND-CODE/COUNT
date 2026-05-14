@@ -47,14 +47,17 @@ section, .detail-card, .search-section, .product-list-section, .session-section 
 }
 
 /* El código (ej. 300066581) */
-.product-item strong, .product-card strong {
+.product-item strong, .product-card strong,
+.product-item .product-code, .product-card .product-code {
   color: #00d2ff !important;
   font-size: 1.15rem;
   display: block;
+  font-weight: bold;
 }
 
 /* LA DESCRIPCIÓN: BLANCO PURO Y BRILLANTE */
-.product-item span, .product-card span, .product-card div, .product-list div {
+.product-item .product-desc, .product-card .product-desc,
+.product-item span:not(.product-code):not(.u-x-b), .product-card span:not(.product-code):not(.u-x-b), .product-card div, .product-list div {
   color: #ffffff !important; 
   font-size: 1.1rem;
   font-weight: 800; /* Más grueso para que brille más */
@@ -67,6 +70,9 @@ section, .detail-card, .search-section, .product-list-section, .session-section 
 .u-x-b, .product-card b, .product-item b {
   color: #39ff14 !important;
   font-weight: bold;
+}
+.product-item .u-x-b, .product-card .u-x-b {
+  display: inline !important;
 }
 
 /* --- TABLA: SOLO ENCABEZADOS EN NEGRO --- */
