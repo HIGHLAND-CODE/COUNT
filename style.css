@@ -1,4 +1,4 @@
-/* ESTILO FINAL: DESCRIPCIÓN BLANCA Y ENCABEZADOS DE TABLA NEGROS */
+/* ESTILO FINAL: DESCRIPCIÓN BLANCO BRILLANTE Y ENCABEZADOS TABLA NEGROS */
 
 * {
   box-sizing: border-box;
@@ -38,76 +38,86 @@ section, .detail-card, .search-section, .product-list-section, .session-section 
   border: 1px solid #3d4a61;
 }
 
-/* --- PRODUCTOS ENCONTRADOS (DESCRIPCIÓN BLANCA) --- */
-.product-card, .product-item {
+/* --- PRODUCTOS ENCONTRADOS (LAYS ASADO - BLANCO BRILLANTE) --- */
+
+.product-item, .product-card {
   padding: 15px 5px;
   border-bottom: 1px solid #3d4a61;
+  cursor: pointer;
 }
 
-.product-card strong {
+/* El código (ej. 300066581) */
+.product-item strong, .product-card strong {
   color: #00d2ff !important;
-  font-size: 1.1rem;
-}
-
-/* Descripción blanca en la búsqueda */
-.product-card span, .product-item span, .product-item div {
-  color: #ffffff !important; 
-  font-size: 1.05rem;
-  font-weight: 700;
+  font-size: 1.15rem;
   display: block;
 }
 
-.product-card .u-x-b, .product-item b {
+/* LA DESCRIPCIÓN: BLANCO PURO Y BRILLANTE */
+.product-item span, .product-card span, .product-card div, .product-list div {
+  color: #ffffff !important; 
+  font-size: 1.1rem;
+  font-weight: 800; /* Más grueso para que brille más */
+  display: block;
+  margin-top: 5px;
+  opacity: 1 !important;
+}
+
+/* El UxB en verde */
+.u-x-b, .product-card b, .product-item b {
   color: #39ff14 !important;
   font-weight: bold;
 }
 
-/* --- TABLA: SOLO ENCABEZADOS NEGROS --- */
+/* --- TABLA: SOLO ENCABEZADOS EN NEGRO --- */
+
 table {
   width: 100%;
   border-collapse: collapse;
-  background: #161e2d;
   margin-top: 10px;
+  background: transparent;
 }
 
-/* ENCABEZADOS: Fondo claro y Letra Negra */
+/* Los títulos de la tabla: Letra Negra y fondo claro */
 th {
-  background: #f1f5f9 !important; /* Blanco/Gris claro */
-  color: #000000 !important;      /* LETRA NEGRA */
+  background: #f1f5f9 !important;
+  color: #000000 !important; /* LETRA NEGRA */
   padding: 10px 2px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 900;
   border: 1px solid #94a3b8;
   text-transform: uppercase;
 }
 
-/* CUERPO DE LA TABLA: Letra Blanca */
+/* Los datos almacenados: Letra Blanca */
 td {
   padding: 12px 4px;
   border: 1px solid #3d4a61;
-  color: #ffffff !important;      /* LETRA BLANCA */
-  font-size: 0.8rem;
+  color: #ffffff !important; /* LETRA BLANCA */
+  font-size: 0.85rem;
   text-align: center;
+  font-weight: 600;
 }
 
-/* --- INPUTS Y BOTONES --- */
+/* --- INPUT DE BÚSQUEDA --- */
 input {
   width: 100%;
   background: #ffffff !important;
   color: #000000 !important;
   border: 3px solid #00d2ff;
   border-radius: 8px;
-  padding: 14px;
-  font-size: 1.1rem;
+  padding: 15px;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
+/* BOTONES */
 button {
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   border-radius: 12px;
   font-weight: 900;
-  font-size: 1rem;
+  font-size: 1.1rem;
   text-transform: uppercase;
   border: none;
   margin-top: 10px;
