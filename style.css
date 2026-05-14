@@ -1,14 +1,15 @@
-/* RESET Y VARIABLES */
+/* ESTILO FINAL DE ALTO CONTRASTE - COPIAR TODO */
+
 * {
   box-sizing: border-box;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: #0f172a; /* Fondo azul noche profundo */
-  color: #f1f5f9;
+  background: #0f172a; /* Fondo azul noche */
+  color: #ffffff;      /* Texto general en blanco */
   display: flex;
   justify-content: center;
 }
@@ -16,159 +17,139 @@ body {
 main {
   width: 100%;
   max-width: 500px;
-  background: #1e293b; /* Tarjeta principal gris azulado */
+  background: #1e293b; /* Fondo de la tarjeta principal */
   min-height: 100vh;
-  padding: 24px 16px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  padding: 20px 15px;
 }
 
-/* TÍTULOS */
 h1 {
   font-size: 1.5rem;
-  font-weight: 800;
+  color: #38bdf8; /* Título celeste */
   text-align: center;
-  margin-bottom: 30px;
-  background: linear-gradient(to right, #38bdf8, #818cf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-h2 {
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #94a3b8;
-  margin-bottom: 16px;
-}
-
-/* SECCIONES */
-section {
-  background: #334155;
-  border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 24px;
-  border: 1px solid #475569;
-}
-
-/* INPUTS */
-label {
-  font-size: 0.85rem;
-  color: #cbd5e1;
-  margin-bottom: 8px;
-  display: block;
-}
-
-input[type="search"],
-input[type="number"],
-input[type="date"] {
-  width: 100%;
-  background: #1e293b;
-  border: 1px solid #475569;
-  border-radius: 12px;
-  padding: 14px;
-  color: white;
-  font-size: 1rem;
-  margin-bottom: 16px;
-  outline: none;
-  transition: border-color 0.3s;
-}
-
-input:focus {
-  border-color: #38bdf8;
-  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
-}
-
-/* LISTA DE RESULTADOS (CUADRÍCULA) */
-.product-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.product-card {
-  background: #475569;
-  border: 1px solid #64748b;
-  padding: 16px;
-  border-radius: 14px;
-  transition: transform 0.2s, background 0.2s;
-}
-
-.product-card:active {
-  transform: scale(0.97);
-  background: #38bdf8;
-}
-
-/* BOTONES */
-button {
-  width: 100%;
-  border-radius: 14px;
-  border: none;
-  font-weight: 700;
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 16px;
-  transition: all 0.2s;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Botón Agregar */
-#addEntryButton {
-  background: #38bdf8;
-  color: #0f172a;
-  margin-top: 10px;
-}
-
-/* Botón Exportar */
-#exportButton {
-  background: #10b981;
-  color: white;
-}
-
-/* Botón Nuevo Conteo */
-.warning-button {
-  background: transparent;
-  color: #f43f5e;
-  border: 2px solid #f43f5e;
   margin-bottom: 20px;
 }
 
-button:disabled {
-  opacity: 0.3;
-  filter: grayscale(1);
-}
-
-/* LISTA DE SESIÓN (ITEMS CARGADOS) */
-.session-entries ul {
-  padding: 0;
-  list-style: none;
-}
-
-.session-entries li {
-  background: #1e293b;
+/* SECCIONES (Los cuadros grises de la imagen) */
+section, .detail-card, .search-section, .product-list-section {
+  background: #334155;
+  border-radius: 12px;
   padding: 16px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  border: 1px solid #334155;
+  margin-bottom: 20px;
+  border: 1px solid #475569;
+}
+
+/* CUADRO DE PROVEEDOR ACTIVO (El blanco de arriba) */
+.provider-info, .alert-info {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
   font-size: 0.9rem;
+  line-height: 1.4;
 }
 
-.session-entries li strong {
-  color: #38bdf8;
+.provider-info b, .provider-info strong {
+  color: #2563eb;
+}
+
+/* INPUTS (Para que se vea lo que escribes) */
+label {
   display: block;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+input[type="search"], input[type="number"], input[type="date"] {
+  width: 100%;
+  background: #0f172a;
+  border: 2px solid #38bdf8;
+  border-radius: 10px;
+  padding: 14px;
+  color: #ffffff !important; /* Texto escrito en blanco */
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  outline: none;
+}
+
+/* RESULTADOS DE BÚSQUEDA */
+.product-card, .product-item {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+  border-left: 5px solid #38bdf8;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.product-card strong {
+  color: #7dd3fc; /* Código en celeste claro */
+  display: block;
+  font-size: 1.1rem;
+}
+
+.product-card span {
+  color: #ffffff !important; /* Descripción en blanco puro */
+  font-weight: bold;
+}
+
+/* TABLA DE CARGA (La de image_92373a.png) */
+.session-entries table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background: #1e293b;
+}
+
+.session-entries th {
+  background: #475569;
+  color: #ffffff;
+  padding: 10px 5px;
+  font-size: 0.75rem;
+  border: 1px solid #64748b;
+  text-transform: uppercase;
+}
+
+.session-entries td {
+  padding: 10px 5px;
+  border: 1px solid #475569;
+  color: #ffffff !important; /* Texto de la tabla en blanco */
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* BOTONES GRANDES */
+button {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 800;
   font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: block;
+  margin-top: 10px;
 }
 
-/* ESTADOS */
+#addEntryButton {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+#exportButton {
+  background: #10b981; /* Verde esmeralda */
+  color: white;
+}
+
+.warning-button {
+  background: transparent;
+  border: 2px solid #f43f5e !important;
+  color: #f43f5e !important;
+}
+
+/* UTILIDADES */
 .hidden { display: none; }
-.empty { color: #64748b; text-align: center; padding: 10px; }
-
-/* AJUSTE MÓVIL */
-@media (max-width: 480px) {
-  main {
-    padding: 16px 12px;
-  }
-  section {
-    padding: 16px;
-  }
-}
+.empty { color: #94a3b8; text-align: center; padding: 20px; }
