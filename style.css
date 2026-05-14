@@ -1,15 +1,15 @@
-/* ESTILO FINAL DE ALTO CONTRASTE - COPIAR TODO */
+/* ESTILO DE MÁXIMA LEGIBILIDAD - COPIAR COMPLETO */
 
 * {
   box-sizing: border-box;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: #0f172a; /* Fondo azul noche */
-  color: #ffffff;      /* Texto general en blanco */
+  background: #0a0f1d; /* Fondo casi negro para resaltar todo */
+  color: #ffffff;
   display: flex;
   justify-content: center;
 }
@@ -17,139 +17,101 @@ body {
 main {
   width: 100%;
   max-width: 500px;
-  background: #1e293b; /* Fondo de la tarjeta principal */
+  background: #161e2d; 
   min-height: 100vh;
   padding: 20px 15px;
 }
 
-h1 {
-  font-size: 1.5rem;
-  color: #38bdf8; /* Título celeste */
+h1, h2 {
+  color: #ffffff !important;
   text-align: center;
-  margin-bottom: 20px;
-}
-
-/* SECCIONES (Los cuadros grises de la imagen) */
-section, .detail-card, .search-section, .product-list-section {
-  background: #334155;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-  border: 1px solid #475569;
-}
-
-/* CUADRO DE PROVEEDOR ACTIVO (El blanco de arriba) */
-.provider-info, .alert-info {
-  background: #ffffff !important;
-  color: #0f172a !important;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-.provider-info b, .provider-info strong {
-  color: #2563eb;
-}
-
-/* INPUTS (Para que se vea lo que escribes) */
-label {
-  display: block;
-  color: #94a3b8;
-  margin-bottom: 8px;
-  font-size: 0.85rem;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
-input[type="search"], input[type="number"], input[type="date"] {
-  width: 100%;
-  background: #0f172a;
-  border: 2px solid #38bdf8;
-  border-radius: 10px;
-  padding: 14px;
-  color: #ffffff !important; /* Texto escrito en blanco */
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-  outline: none;
+/* SECCIONES GRISES */
+section, .detail-card, .search-section, .product-list-section {
+  background: #242f41;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #3d4a61;
 }
 
-/* RESULTADOS DE BÚSQUEDA */
-.product-card, .product-item {
-  background: #1e293b;
-  padding: 15px;
-  border-radius: 10px;
-  border-left: 5px solid #38bdf8;
-  margin-bottom: 10px;
+/* --- SOLUCIÓN PARA PRODUCTOS ENCONTRADOS (image_9227e1.png) --- */
+
+.product-item, .product-card {
+  padding: 18px 10px;
+  border-bottom: 2px solid #3d4a61;
   cursor: pointer;
+  background: transparent;
 }
 
-.product-card strong {
-  color: #7dd3fc; /* Código en celeste claro */
+/* El Código del producto */
+.product-item strong, .product-card strong {
+  color: #00d2ff !important; /* Celeste brillante */
+  font-size: 1.2rem;
   display: block;
-  font-size: 1.1rem;
+  margin-bottom: 4px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
-.product-card span {
-  color: #ffffff !important; /* Descripción en blanco puro */
+/* La Descripción (Lo que se veía oscuro en tu foto) */
+.product-item span, .product-card span, .product-card div {
+  color: #ffffff !important; /* BLANCO PURO */
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: block;
+  opacity: 1 !important;
+}
+
+/* El texto de [UxB: XX] */
+.product-item small, .product-card b, .product-card .u-x-b {
+  color: #39ff14 !important; /* VERDE NEÓN */
+  font-size: 1rem;
+}
+
+/* --- TABLA Y FORMULARIOS --- */
+
+input {
+  width: 100%;
+  background: #ffffff !important; /* Fondo blanco para escribir fácil */
+  color: #000000 !important;      /* Letra negra para máximo contraste */
+  border: 3px solid #00d2ff;
+  border-radius: 8px;
+  padding: 15px;
+  font-size: 1.2rem;
   font-weight: bold;
 }
 
-/* TABLA DE CARGA (La de image_92373a.png) */
-.session-entries table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  background: #1e293b;
-}
-
-.session-entries th {
-  background: #475569;
-  color: #ffffff;
+table td, table th {
+  color: #ffffff !important;
+  border: 1px solid #4a5568;
   padding: 10px 5px;
-  font-size: 0.75rem;
-  border: 1px solid #64748b;
-  text-transform: uppercase;
+  font-weight: bold;
 }
 
-.session-entries td {
-  padding: 10px 5px;
-  border: 1px solid #475569;
-  color: #ffffff !important; /* Texto de la tabla en blanco */
-  font-size: 0.85rem;
-  text-align: center;
-}
-
-/* BOTONES GRANDES */
+/* BOTONES */
 button {
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   border-radius: 12px;
-  border: none;
-  font-weight: 800;
-  font-size: 1rem;
+  font-weight: 900;
+  font-size: 1.1rem;
   text-transform: uppercase;
-  cursor: pointer;
-  display: block;
   margin-top: 10px;
-}
-
-#addEntryButton {
-  background: #38bdf8;
-  color: #0f172a;
+  border: none;
 }
 
 #exportButton {
-  background: #10b981; /* Verde esmeralda */
-  color: white;
+  background: #00ff88; /* Verde muy llamativo */
+  color: #000000;
 }
 
 .warning-button {
-  background: transparent;
-  border: 2px solid #f43f5e !important;
-  color: #f43f5e !important;
+  background: #ff3e3e;
+  color: #ffffff;
 }
 
-/* UTILIDADES */
+/* OCULTAR ELEMENTOS */
 .hidden { display: none; }
-.empty { color: #94a3b8; text-align: center; padding: 20px; }
