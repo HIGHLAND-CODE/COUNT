@@ -42,7 +42,7 @@ section, .detail-card, .search-section, .product-list-section, .session-section 
 
 .product-item, .product-card {
   padding: 15px 5px;
-  border-bottom: 1px solid #3d4a61;
+  border-bottom: 1px solid #f4f6fa;
   cursor: pointer;
 }
 
