@@ -98,6 +98,8 @@ const productos = [
     {"codigo": "300052694", "descripcion": "TWISTOS MINIT QUESO 155GX20", "unidades_x_bulto": 20, "proveedor": "Pepsico de Argentina SRL"},
     {"codigo": "300063263", "descripcion": "TWISTOS MINIT QUESO 40GX112X1", "unidades_x_bulto": 112, "proveedor": "Pepsico de Argentina SRL"},
     {"codigo": "300063097", "descripcion": "TWISTOS MINIT QUESO 95GX30X1", "unidades_x_bulto": 30, "proveedor": "Pepsico de Argentina SRL"},
+    {"codigo": "300066791", "descripcion": "PEHUAMAR ACANALADA 420GRX9X1 RM", "unidades_x_bulto": 9, "proveedor": "Pepsico de Argentina SRL"},
+    {"codigo": "300066790", "descripcion": "PEHUAMAR PAPA LISA 420GRX9X1 RM", "unidades_x_bulto": 9, "proveedor": "Pepsico de Argentina SRL"},
     {"codigo": "10530", "descripcion": "HEREFORD TTO 6X750", "unidades_x_bulto": 6, "proveedor": "GRUPO PEÑAFLOR SA"},
     {"codigo": "14029", "descripcion": "HEREFORD MALBEC 6X750", "unidades_x_bulto": 6, "proveedor": "GRUPO PEÑAFLOR SA"},
     {"codigo": "14507", "descripcion": "EL BAUTISMO MALBEC 6X750", "unidades_x_bulto": 6, "proveedor": "GRUPO PEÑAFLOR SA"},
