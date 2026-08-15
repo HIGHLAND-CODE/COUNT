@@ -30,16 +30,23 @@
 * {
   box-sizing: border-box;
   font-family: 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 /* Todo número, código o timestamp va en JetBrains Mono. Sin excepciones. */
 .product-code,
 .u-x-b,
-td:nth-child(1),
-td:nth-child(4),
-td:nth-child(5),
-td:nth-child(6),
-td:nth-child(7),
+td[data-label="Cód."],
+td[data-label="Vencimiento"],
+td[data-label="UxB"],
+td[data-label="Bultos"],
+td[data-label="Unidades"],
+td[data-label="Total"],
 #cantidadBultos,
 #unidadesSueltas,
 #fechaVencimiento {
@@ -53,6 +60,8 @@ body {
   color: var(--ledger-ink);
   display: flex;
   justify-content: center;
+  overflow-x: hidden;
+  min-height: 100dvh;
 }
 
 main {
@@ -60,7 +69,13 @@ main {
   max-width: 500px;
   background: var(--ledger-card);
   min-height: 100vh;
-  padding: 20px 15px;
+  min-height: 100dvh;
+  padding: 20px 15px calc(20px + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 380px) {
+  main { padding: 16px 12px calc(16px + env(safe-area-inset-bottom)); }
+  h1 { font-size: 1.3rem; }
 }
 
 h1, h2 {
@@ -105,6 +120,7 @@ section, .detail-card, .search-section, .product-list-section, .session-section 
   display: block;
   margin-top: 5px;
   opacity: 1 !important;
+  word-break: break-word;
 }
 
 /* El UxB — metadato secundario */
@@ -116,33 +132,85 @@ section, .detail-card, .search-section, .product-list-section, .session-section 
   display: inline !important;
 }
 
-/* --- TABLA --- */
+/* --- SESIÓN: tarjetas apiladas ---
+   La app vive siempre en una columna angosta (max-width 500px, hasta en
+   desktop), así que una tabla clásica de 8 columnas nunca entra bien.
+   Cada renglón se muestra como tarjeta con label:valor. */
+
+.table-scroll {
+  margin-top: 10px;
+}
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
   background: transparent;
 }
 
-th {
-  background: var(--field-paper) !important;
-  color: var(--ledger-ink) !important;
-  padding: 10px 2px;
-  font-size: 0.75rem;
-  font-weight: 900;
+.table-head-row, th {
+  display: none;
+}
+
+tr {
+  display: block;
+  background: var(--ledger-card);
   border: 1px solid var(--ledger-line);
-  text-transform: uppercase;
+  border-radius: 12px;
+  padding: 4px 14px;
+  margin-bottom: 12px;
 }
 
 td {
-  padding: 12px 4px;
-  border: 1px solid var(--ledger-line);
-  background: var(--ledger-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  border: none;
+  border-bottom: 1px solid var(--ledger-line);
+  padding: 10px 0;
+  text-align: right;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--ledger-ink) !important;
-  font-size: 0.85rem;
-  text-align: center;
-  font-weight: 600;
+  background: transparent;
+}
+
+td:last-child { border-bottom: none; }
+
+td::before {
+  content: attr(data-label);
+  color: var(--ledger-ink-soft);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  text-align: left;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  white-space: nowrap;
+}
+
+td[data-label="Prod."] {
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  word-break: break-word;
+}
+td[data-label="Prod."]::before { margin-bottom: 2px; }
+
+td.td-accion {
+  justify-content: center;
+  padding-top: 12px;
+}
+td.td-accion::before { content: none; }
+
+.row-delete {
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--route-red-bg);
+  color: var(--route-red);
+  font-weight: 800;
+  font-size: 0.75rem;
 }
 
 /* --- INPUT DE BÚSQUEDA Y FORM --- */
