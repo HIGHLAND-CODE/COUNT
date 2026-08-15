@@ -558,9 +558,10 @@ function asegurarBarraProveedor() {
         el.style.margin = '10px 0 16px';
         el.style.padding = '10px 12px';
         el.style.borderRadius = '10px';
-        el.style.border = '1px solid #dfe7ef';
-        el.style.background = '#f8fafc';
-        el.style.color = '#111827';
+        el.style.border = '1px solid #E2E0D8';
+        el.style.background = '#F6F5F1';
+        el.style.color = '#14213D';
+        el.style.fontFamily = "'JetBrains Mono', ui-monospace, 'Courier New', monospace";
         el.style.fontSize = '0.95rem';
         if (h1 && h1.parentNode) {
             h1.parentNode.insertBefore(el, h1.nextSibling);
@@ -574,9 +575,9 @@ function asegurarBarraProveedor() {
 function actualizarProveedorUI() {
     const el = asegurarBarraProveedor();
     if (!proveedorActivo) {
-        el.innerHTML = '<strong>Proveedor activo:</strong> <span style="color:#6b7280">(no seleccionado aún)</span>';
+        el.innerHTML = '<strong>Proveedor activo:</strong> <span style="color:#3D4A6B">(no seleccionado aún)</span>';
     } else {
-        el.innerHTML = `<strong>Proveedor activo:</strong> <span style="color:#2563eb;font-weight:700">${proveedorActivo}</span> <span style="color:#6b7280">(bloqueado hasta "Nuevo Conteo")</span>`;
+        el.innerHTML = `<strong>Proveedor activo:</strong> <span style="color:#C8552D;font-weight:700">${proveedorActivo}</span> <span style="color:#3D4A6B">(bloqueado hasta "Nuevo Conteo")</span>`;
     }
 }
 
@@ -599,11 +600,21 @@ searchInput.addEventListener('input', (e) => {
         productList.innerHTML = "Escriba para buscar...";
         return;
     }
+    const coincideTermino = p => (p.descripcion || '').toLowerCase().includes(term) || (p.codigo || '').includes(term);
     const filtrados = productos.filter(p => {
-    const okProveedor = !proveedorActivo || (p.proveedor === proveedorActivo);
-    if (!okProveedor) return false;
-    return (p.descripcion || '').toLowerCase().includes(term) || (p.codigo || '').includes(term);
-});
+        const okProveedor = !proveedorActivo || (p.proveedor === proveedorActivo);
+        return okProveedor && coincideTermino(p);
+    });
+
+    if (filtrados.length === 0) {
+        if (proveedorActivo && productos.some(coincideTermino)) {
+            productList.innerHTML = `Sin resultados de <strong>${proveedorActivo}</strong> para ese criterio. Hay productos de otros proveedores, pero no se pueden mezclar en este conteo.`;
+        } else {
+            productList.innerHTML = "Sin resultados.";
+        }
+        return;
+    }
+
     productList.innerHTML = "";
     filtrados.forEach(p => {
         const div = document.createElement('div');
@@ -632,7 +643,7 @@ searchInput.addEventListener('input', (e) => {
                 arr[idx+1].focus();
                 if(arr[idx+1].select) arr[idx+1].select();
             } else {
-                guardarConteo();
+                document.getElementById('productForm').requestSubmit();
             }
         }
     });
@@ -643,7 +654,6 @@ function guardarConteo() {
     const bultos = parseInt(inputBultos.value) || 0;
     const unidades = parseInt(inputUnidades.value) || 0;
     const uxb = parseInt(selectedProductName.dataset.uxb) || 0;
-    if (!inputFecha.value) return alert("Falta fecha");
 
     const proveedorProducto = selectedProductName.dataset.proveedor || "";
     if (!proveedorActivo) {
@@ -676,7 +686,10 @@ No se pueden mezclar proveedores.`);
     searchInput.focus();
 }
 
-document.getElementById('addEntryButton').onclick = guardarConteo;
+document.getElementById('productForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    guardarConteo();
+});
 
 // 4. TABLA EN PANTALLA
 function actualizarVista() {
@@ -706,7 +719,7 @@ function actualizarVista() {
             <td>${i.uxb}</td>
             <td>${i.bultos}</td>
             <td>${i.unidades}</td>
-            <td style="font-weight:bold;color:green;">${i.total}</td>
+            <td style="font-weight:bold;color:#2F6D4F;">${i.total}</td>
         </tr>`;
     });
     tabla += `</table></div>`;
@@ -719,7 +732,7 @@ exportButton.onclick = () => {
     conteosEfectuados.forEach(i => {
         csv += `${i.codigo};${i.nombre};${i.proveedor || ""};${i.uxb};${i.bultos};${i.unidades};${i.total};${i.fecha};${i.hora}\r\n`;
     });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-16;' });
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `conteo_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`;
