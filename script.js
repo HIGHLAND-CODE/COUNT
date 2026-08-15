@@ -692,6 +692,14 @@ document.getElementById('productForm').addEventListener('submit', (e) => {
 });
 
 // 4. TABLA EN PANTALLA
+function formatFecha(iso) {
+    if (!iso) return '';
+    const partes = iso.split('-');
+    if (partes.length !== 3) return iso;
+    const [y, m, d] = partes;
+    return `${d}/${m}/${y}`;
+}
+
 function actualizarVista() {
     if (conteosEfectuados.length === 0) {
         sessionEntries.innerHTML = "Sin datos.";
@@ -700,31 +708,48 @@ function actualizarVista() {
     }
     exportButton.disabled = false;
 
-    let tabla = `<div style="overflow-x:auto;"><table border="1" style="width:100%; border-collapse: collapse; font-size: 0.8em;">
-        <tr style="background:#eee;">
+    let tabla = `<div class="table-scroll"><table border="1">
+        <tr class="table-head-row">
             <th>Cód.</th>
             <th>Prod.</th>
+            <th>Vencimiento</th>
             <th>Proveedor</th>
             <th>UxB</th>
             <th>B</th>
             <th>U</th>
             <th>Total</th>
+            <th class="th-accion">Acción</th>
         </tr>`;
 
-    conteosEfectuados.forEach(i => {
+    conteosEfectuados.forEach((entry, idx) => {
         tabla += `<tr>
-            <td>${i.codigo}</td>
-            <td>${i.nombre}</td>
-            <td>${i.proveedor || ""}</td>
-            <td>${i.uxb}</td>
-            <td>${i.bultos}</td>
-            <td>${i.unidades}</td>
-            <td style="font-weight:bold;color:#2F6D4F;">${i.total}</td>
+            <td data-label="Cód.">${entry.codigo}</td>
+            <td data-label="Prod.">${entry.nombre}</td>
+            <td data-label="Vencimiento">${formatFecha(entry.fecha)}</td>
+            <td data-label="Proveedor">${entry.proveedor || ""}</td>
+            <td data-label="UxB">${entry.uxb}</td>
+            <td data-label="Bultos">${entry.bultos}</td>
+            <td data-label="Unidades">${entry.unidades}</td>
+            <td data-label="Total" style="font-weight:bold;color:#2F6D4F;">${entry.total}</td>
+            <td data-label="" class="td-accion"><button type="button" class="row-delete" data-idx="${idx}" aria-label="Borrar renglón">Borrar</button></td>
         </tr>`;
     });
     tabla += `</table></div>`;
     sessionEntries.innerHTML = tabla;
 }
+
+// Borrar un renglón puntual sin perder el resto del conteo
+sessionEntries.addEventListener('click', (e) => {
+    const btn = e.target.closest('.row-delete');
+    if (!btn) return;
+    const idx = parseInt(btn.dataset.idx, 10);
+    const entry = conteosEfectuados[idx];
+    if (!entry) return;
+    if (!confirm(`¿Borrar este renglón?\n${entry.codigo} - ${entry.nombre}`)) return;
+    conteosEfectuados.splice(idx, 1);
+    localStorage.setItem('misConteos', JSON.stringify(conteosEfectuados));
+    actualizarVista();
+});
 
 // 5. EXPORTAR CSV
 exportButton.onclick = () => {
