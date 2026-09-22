@@ -557,7 +557,7 @@ let proveedorActivo = (conteosEfectuados.length > 0 && conteosEfectuados[0].prov
 function asegurarBarraProveedor() {
     let el = document.getElementById('proveedorActivo');
     if (!el) {
-        const h1 = document.querySelector('main h1');
+        const header = document.querySelector('main .app-header') || document.querySelector('main h1');
         el = document.createElement('div');
         el.id = 'proveedorActivo';
         el.style.margin = '10px 0 16px';
@@ -568,8 +568,8 @@ function asegurarBarraProveedor() {
         el.style.color = '#14213D';
         el.style.fontFamily = "'JetBrains Mono', ui-monospace, 'Courier New', monospace";
         el.style.fontSize = '0.95rem';
-        if (h1 && h1.parentNode) {
-            h1.parentNode.insertBefore(el, h1.nextSibling);
+        if (header && header.parentNode) {
+            header.parentNode.insertBefore(el, header.nextSibling);
         } else {
             document.body.insertBefore(el, document.body.firstChild);
         }

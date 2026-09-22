@@ -76,6 +76,57 @@ main {
 @media (max-width: 380px) {
   main { padding: 16px 12px calc(16px + env(safe-area-inset-bottom)); }
   h1 { font-size: 1.3rem; }
+  .app-header {
+    margin: -16px -12px 16px -12px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-top)) 12px;
+  }
+  .app-header h1 { font-size: 0.85rem; }
+  .quick-actions button { padding: 9px 10px; font-size: 0.62rem; }
+}
+
+/* --- HEADER FIJO: título + acciones siempre a mano, sin scroll --- */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--ledger-card);
+  border-bottom: 1px solid var(--ledger-line);
+  margin: -20px -15px 20px -15px;
+  padding: 14px 15px;
+  padding-top: calc(14px + env(safe-area-inset-top));
+}
+
+.app-header h1 {
+  text-align: left;
+  text-transform: none;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.quick-actions button {
+  width: auto;
+  margin-top: 0;
+  padding: 10px 14px;
+  font-size: 0.7rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(20, 33, 61, 0.18);
 }
 
 h1, h2 {

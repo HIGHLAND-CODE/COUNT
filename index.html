@@ -16,7 +16,13 @@
 </head>
 <body>
 <main>
+<header class="app-header">
 <h1>Conteo de Productos</h1>
+<div class="quick-actions">
+<button id="newCountButton" type="button" class="warning-button">Nuevo</button>
+<button id="exportButton" type="button" disabled>Guardar</button>
+</div>
+</header>
 
 <div id="cronometro" style="display:none;"></div>
 
@@ -51,8 +57,6 @@
 
 <section class="session-section">
 <div id="sessionEntries" class="session-entries">No hay datos.</div>
-<button id="newCountButton" type="button" class="warning-button">Nuevo Conteo</button>
-<button id="exportButton" type="button" disabled>Guardar y exportar Archivo</button>
 </section>
 </main>
 
