@@ -654,6 +654,18 @@ searchInput.addEventListener('input', (e) => {
     });
 });
 
+// 2b. AUTO-SELECCIÓN AL ENFOCAR (bultos/unidades)
+// En Android, el botón "siguiente" del teclado numérico mueve el foco
+// de forma nativa sin disparar el evento Enter de arriba, así que el "0"
+// por defecto queda sin seleccionar y escribir "10" da "100". Seleccionando
+// el contenido en cualquier "focus" (venga de un tap, tab o el botón nativo)
+// se soluciona sin depender de cómo llegó el foco al campo.
+[inputBultos, inputUnidades].forEach((el) => {
+    el.addEventListener('focus', () => {
+        el.select();
+    });
+});
+
 // 3. GUARDAR
 function guardarConteo() {
     const bultos = parseInt(inputBultos.value) || 0;
