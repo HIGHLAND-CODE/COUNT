@@ -774,17 +774,34 @@ sessionEntries.addEventListener('click', (e) => {
     actualizarVista();
 });
 
-// 5. EXPORTAR CSV
+// 5. EXPORTAR EXCEL (.xlsx real, generado por la app)
+// Antes se exportaba un CSV y cada celular lo convert\u00EDa a Excel con una
+// app distinta (algunas lo separaban bien en columnas, otras no y encima
+// corromp\u00EDan las fechas). Generando el .xlsx ac\u00E1 mismo con SheetJS, el
+// archivo sale siempre igual sin importar el celular.
 exportButton.onclick = () => {
-    let csv = "Codigo;Producto;Proveedor;UxB;Bultos;Unidades;Total;Vencimiento;Hora\r\n";
-    conteosEfectuados.forEach(i => {
-        csv += `${i.codigo};${i.nombre};${i.proveedor || ""};${i.uxb};${i.bultos};${i.unidades};${i.total};${i.fecha};${i.hora}\r\n`;
-    });
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `conteo_${new Date().toLocaleDateString().replace(/\//g, '-')}.csv`;
-    link.click();
+    const encabezados = ["Codigo", "Producto", "Proveedor", "UxB", "Bultos", "Unidades", "Total", "Vencimiento", "Hora"];
+    const filas = conteosEfectuados.map(i => [
+        i.codigo, i.nombre, i.proveedor || "", i.uxb, i.bultos, i.unidades, i.total, i.fecha, i.hora
+    ]);
+    const datos = [encabezados, ...filas];
+
+    const hoja = XLSX.utils.aoa_to_sheet(datos);
+    hoja['!cols'] = [
+        { wch: 12 }, // Codigo
+        { wch: 38 }, // Producto
+        { wch: 28 }, // Proveedor
+        { wch: 8 },  // UxB
+        { wch: 8 },  // Bultos
+        { wch: 10 }, // Unidades
+        { wch: 10 }, // Total
+        { wch: 14 }, // Vencimiento
+        { wch: 12 }  // Hora
+    ];
+
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, "Conteo");
+    XLSX.writeFile(libro, `conteo_${new Date().toLocaleDateString().replace(/\//g, '-')}.xlsx`);
 };
 
 document.getElementById('newCountButton').onclick = () => {
