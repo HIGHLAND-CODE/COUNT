@@ -985,7 +985,7 @@ actualizarVista();
 // Si cambiás APP_VERSION, cambiá también el "?v=" de script.js en index.html: el aviso compara los dos.
 // Consultar necesita conexión; sin conexión no hace nada y se sigue trabajando normal (los conteos están en el celular).
 // ============================
-const APP_VERSION = '1.18';
+const APP_VERSION = '1.19';
 (function mostrarVersion() {
     const h = document.querySelector('.app-header h1');
     if (h) h.insertAdjacentHTML('beforeend', ` <small class="app-version">v${APP_VERSION}</small>`);
@@ -1030,6 +1030,7 @@ const CHANGELOG = [
     { version: '1.16', fecha: '12/11/2026', items: ['Pantalla más limpia: los paneles de búsqueda y de datos del producto aparecen solo cuando los necesitás.'] },
     { version: '1.17', fecha: '12/11/2026', items: ['Nuevo: esta ventana te cuenta qué cambió cada vez que COUNT se actualiza.'] },
     { version: '1.18', fecha: '12/11/2026', items: ['Pantalla de inicio nueva: primero elegís el proveedor y después buscás y cargás los productos.', 'El proveedor se ve grande arriba mientras contás, con cuántos productos cargaste.', '"Guardar" es ahora el botón principal y muestra cuántos productos cargaste. "Nuevo" quedó más discreto.'] },
+    { version: '1.19', fecha: '12/11/2026', items: ['La pantalla de inicio ahora muestra el logo de Highland Code.', 'COUNT tiene ícono propio en la pestaña y en el acceso directo del teléfono (si ya tenías el acceso directo, borralo y volvelo a crear para verlo).'] },
 ];
 const LS_NOVEDADES_VISTAS = 'count_novedades_vistas_v1';
 const MAX_NOVEDADES_VISIBLES = 4;
