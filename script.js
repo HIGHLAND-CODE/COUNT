@@ -826,35 +826,19 @@ function actualizarVista() {
         return;
     }
     exportButton.disabled = false;
-
-    let tabla = `<div class="table-scroll"><table border="1">
-        <tr class="table-head-row">
-            <th>Cód.</th>
-            <th>Prod.</th>
-            <th>Vencimiento</th>
-            <th>Proveedor</th>
-            <th>UxB</th>
-            <th>B</th>
-            <th>U</th>
-            <th>Total</th>
-            <th class="th-accion">Acción</th>
-        </tr>`;
-
-    conteosEfectuados.forEach((entry, idx) => {
-        tabla += `<tr>
-            <td data-label="Cód.">${entry.codigo}</td>
-            <td data-label="Prod.">${entry.nombre}</td>
-            <td data-label="Vencimiento">${formatFecha(entry.fecha)}</td>
-            <td data-label="Proveedor">${entry.proveedor || ""}</td>
-            <td data-label="UxB">${entry.uxb}</td>
-            <td data-label="Bultos">${entry.bultos}</td>
-            <td data-label="Unidades">${entry.unidades}</td>
-            <td data-label="Total" style="font-weight:bold;color:#2F6D4F;">${entry.total}</td>
-            <td data-label="" class="td-accion"><button type="button" class="row-edit" data-idx="${idx}" aria-label="Editar renglón">Editar</button><button type="button" class="row-delete" data-idx="${idx}" aria-label="Borrar renglón">Borrar</button></td>
-        </tr>`;
-    });
-    tabla += `</table></div>`;
-    sessionEntries.innerHTML = tabla;
+    const esc = (t) => String(t == null ? '' : t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const n = conteosEfectuados.length;
+    let html = `<div class="entries-summary">${n} cargado${n === 1 ? '' : 's'} · el último arriba</div>`;
+    for (let idx = n - 1; idx >= 0; idx--) {
+        const entry = conteosEfectuados[idx];
+        const calc = entry.unidades ? `${entry.bultos} bultos × ${entry.uxb} + ${entry.unidades} sueltas` : `${entry.bultos} bultos × ${entry.uxb}`;
+        html += `<div class="entry-card${entry.editado ? ' editado' : ''}">
+            <div class="ec-head"><div class="ec-name">${esc(entry.nombre)}</div><div class="ec-total">${entry.total}<small>un.</small></div></div>
+            <div class="ec-meta"><span>${esc(entry.codigo)}</span><span>Vence ${formatFecha(entry.fecha) || '—'}</span><span>${calc}</span>${entry.editado ? '<span class="ec-edit">editado</span>' : ''}</div>
+            <div class="ec-actions"><button type="button" class="row-edit" data-idx="${idx}" aria-label="Editar renglón">Editar</button><button type="button" class="row-delete" data-idx="${idx}" aria-label="Borrar renglón">Borrar</button></div>
+        </div>`;
+    }
+    sessionEntries.innerHTML = html;
 }
 
 // Editar un renglón (cantidad de bultos, unidades sueltas o vencimiento)
@@ -926,3 +910,41 @@ document.getElementById('newCountButton').onclick = () => {
 actualizarProveedorUI();
 
 actualizarVista();
+
+// ============================
+// Versión de la app y aviso de versión nueva.
+// Si cambiás APP_VERSION, cambiá también el "?v=" de script.js en index.html: el aviso compara los dos.
+// Consultar necesita conexión; sin conexión no hace nada y se sigue trabajando normal (los conteos están en el celular).
+// ============================
+const APP_VERSION = '1.15';
+(function mostrarVersion() {
+    const h = document.querySelector('.app-header h1');
+    if (h) h.insertAdjacentHTML('beforeend', ` <small class="app-version">v${APP_VERSION}</small>`);
+})();
+
+let ultimoChequeoVersion = 0;
+async function buscarActualizacion() {
+    if (Date.now() - ultimoChequeoVersion < 60000) return; // como mucho 1 consulta por minuto
+    ultimoChequeoVersion = Date.now();
+    try {
+        const r = await fetch('index.html?chk=' + Date.now(), { cache: 'no-store' });
+        if (!r.ok) return;
+        const m = (await r.text()).match(/script\.js\?v=([0-9.]+)/);
+        if (m && m[1] !== APP_VERSION) mostrarAvisoActualizacion(m[1]);
+    } catch (_) { /* sin conexión */ }
+}
+
+function mostrarAvisoActualizacion(version) {
+    if (document.getElementById('avisoVersion')) return;
+    const d = document.createElement('div');
+    d.id = 'avisoVersion';
+    d.innerHTML = `<span>Versión nueva v${version}<br><small>Tus conteos no se pierden</small></span><button type="button" id="btnActualizarApp">Actualizar</button>`;
+    const encabezado = document.querySelector('main .app-header');
+    if (encabezado) encabezado.insertAdjacentElement('afterend', d);
+    else (document.querySelector('main') || document.body).insertBefore(d, (document.querySelector('main') || document.body).firstChild);
+    document.getElementById('btnActualizarApp').onclick = () => { location.href = location.pathname + '?v=' + Date.now(); };
+}
+
+buscarActualizacion();
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') buscarActualizacion(); });
+window.addEventListener('online', buscarActualizacion);

@@ -339,4 +339,42 @@ button:focus-visible {
   color: var(--ledger-ink);
 }
 
+/* --- TARJETA COMPACTA DE CADA CARGA --- */
+.entries-summary {
+  margin: 0 2px 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--ledger-ink-soft);
+}
+.entry-card {
+  background: var(--ledger-card);
+  border: 1px solid var(--ledger-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.entry-card.editado { border-left: 4px solid var(--route-terracotta); }
+.ec-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.ec-name { font-weight: 800; font-size: 0.95rem; line-height: 1.2; color: var(--ledger-ink); word-break: break-word; }
+.ec-total { font-weight: 900; font-size: 1.5rem; line-height: 1; color: var(--field-green); white-space: nowrap; }
+.ec-total small { margin-left: 3px; font-size: 0.6rem; text-transform: uppercase; color: var(--ledger-ink-soft); }
+.ec-meta { display: flex; flex-wrap: wrap; gap: 2px 10px; margin-top: 6px; font-size: 0.78rem; font-weight: 600; color: var(--ledger-ink-soft); }
+.ec-edit { color: var(--route-terracotta); font-weight: 800; }
+.ec-actions { display: flex; gap: 8px; margin-top: 8px; }
+.ec-actions button { width: auto; flex: 1; margin: 0; padding: 7px 10px; font-size: 0.72rem; border-radius: 8px; }
+
+/* --- AVISO DE VERSIÓN NUEVA --- */
+#avisoVersion {
+  margin: 10px 0;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 12px;
+  background: var(--route-terracotta); color: #ffffff;
+  font-size: 0.85rem; font-weight: 700;
+}
+#avisoVersion button { width: auto; margin: 0; padding: 8px 12px; font-size: 0.75rem; background: #ffffff; color: var(--ledger-ink); }
+#avisoVersion small { font-weight: 600; opacity: 0.9; }
+.app-version { font-size: 0.6rem; font-weight: 700; color: var(--ledger-ink-soft); }
+
 .hidden { display: none; }
