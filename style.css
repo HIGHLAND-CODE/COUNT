@@ -253,6 +253,17 @@ td.td-accion {
 }
 td.td-accion::before { content: none; }
 
+.row-edit {
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--ledger-ink);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.75rem;
+}
+
 .row-delete {
   width: 100%;
   margin: 0;
@@ -321,6 +332,11 @@ button:focus-visible {
 .warning-button {
   background: var(--route-red);
   color: #ffffff;
+}
+
+#cancelEditButton {
+  background: var(--ledger-line);
+  color: var(--ledger-ink);
 }
 
 .hidden { display: none; }

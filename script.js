@@ -637,6 +637,50 @@ const inputBultos = document.getElementById('cantidadBultos');
 const inputUnidades = document.getElementById('unidadesSueltas');
 const inputFecha = document.getElementById('fechaVencimiento');
 
+// ============================
+// Editar un renglón ya cargado (todo local: usa el mismo guardado del celular, no necesita conexión)
+// ============================
+let editandoIdx = null;
+const addEntryButton = document.getElementById('addEntryButton');
+
+function salirEdicion() {
+    editandoIdx = null;
+    addEntryButton.textContent = 'Agregar producto';
+    const c = document.getElementById('cancelEditButton');
+    if (c) c.remove();
+}
+
+function entrarEdicion(idx) {
+    const e = conteosEfectuados[idx];
+    if (!e) return;
+    editandoIdx = idx;
+    selectedProductName.textContent = e.nombre;
+    selectedProductName.dataset.codigo = e.codigo;
+    selectedProductName.dataset.uxb = e.uxb;
+    selectedProductName.dataset.proveedor = e.proveedor || "";
+    inputBultos.value = e.bultos;
+    inputUnidades.value = e.unidades;
+    inputFecha.value = e.fecha;
+    detailCard.classList.remove('hidden');
+    productList.innerHTML = "";
+    searchInput.value = "";
+    addEntryButton.textContent = 'Guardar cambios';
+    if (!document.getElementById('cancelEditButton')) {
+        const c = document.createElement('button');
+        c.type = 'button';
+        c.id = 'cancelEditButton';
+        c.textContent = 'Cancelar edición';
+        c.addEventListener('click', () => {
+            salirEdicion();
+            detailCard.classList.add('hidden');
+            document.getElementById('productForm').reset();
+        });
+        addEntryButton.insertAdjacentElement('afterend', c);
+    }
+    window.scrollTo(0, 0);
+    setTimeout(() => { inputBultos.focus(); inputBultos.select(); }, 150);
+}
+
 // 1. BUSCADOR
 searchInput.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
@@ -665,6 +709,7 @@ searchInput.addEventListener('input', (e) => {
         div.className = 'product-item';
         div.innerHTML = `<span class="product-code">${p.codigo}</span><span class="product-desc">${p.descripcion}</span><span class="u-x-b">[UxB: ${p.unidades_x_bulto}]</span>`;
         div.onclick = () => {
+            salirEdicion();
             selectedProductName.textContent = p.descripcion;
             selectedProductName.dataset.codigo = p.codigo;
             selectedProductName.dataset.uxb = p.unidades_x_bulto;
@@ -710,6 +755,24 @@ function guardarConteo() {
     const bultos = parseInt(inputBultos.value) || 0;
     const unidades = parseInt(inputUnidades.value) || 0;
     const uxb = parseInt(selectedProductName.dataset.uxb) || 0;
+
+    // Modo edición: se corrige el renglón que ya estaba cargado (mismo proveedor, misma hora de carga)
+    if (editandoIdx !== null && conteosEfectuados[editandoIdx]) {
+        const e = conteosEfectuados[editandoIdx];
+        e.bultos = bultos;
+        e.unidades = unidades;
+        e.total = (bultos * e.uxb) + unidades;
+        e.fecha = inputFecha.value;
+        e.editado = true;
+        localStorage.setItem('misConteos', JSON.stringify(conteosEfectuados));
+        salirEdicion();
+        actualizarVista();
+        detailCard.classList.add('hidden');
+        document.getElementById('productForm').reset();
+        window.scrollTo(0,0);
+        searchInput.focus();
+        return;
+    }
 
     const proveedorProducto = selectedProductName.dataset.proveedor || "";
     if (!proveedorActivo) {
@@ -787,12 +850,19 @@ function actualizarVista() {
             <td data-label="Bultos">${entry.bultos}</td>
             <td data-label="Unidades">${entry.unidades}</td>
             <td data-label="Total" style="font-weight:bold;color:#2F6D4F;">${entry.total}</td>
-            <td data-label="" class="td-accion"><button type="button" class="row-delete" data-idx="${idx}" aria-label="Borrar renglón">Borrar</button></td>
+            <td data-label="" class="td-accion"><button type="button" class="row-edit" data-idx="${idx}" aria-label="Editar renglón">Editar</button><button type="button" class="row-delete" data-idx="${idx}" aria-label="Borrar renglón">Borrar</button></td>
         </tr>`;
     });
     tabla += `</table></div>`;
     sessionEntries.innerHTML = tabla;
 }
+
+// Editar un renglón (cantidad de bultos, unidades sueltas o vencimiento)
+sessionEntries.addEventListener('click', (e) => {
+    const btn = e.target.closest('.row-edit');
+    if (!btn) return;
+    entrarEdicion(parseInt(btn.dataset.idx, 10));
+});
 
 // Borrar un renglón puntual sin perder el resto del conteo
 sessionEntries.addEventListener('click', (e) => {
@@ -803,6 +873,10 @@ sessionEntries.addEventListener('click', (e) => {
     if (!entry) return;
     if (!confirm(`¿Borrar este renglón?\n${entry.codigo} - ${entry.nombre}`)) return;
     conteosEfectuados.splice(idx, 1);
+    if (editandoIdx !== null) {
+        if (editandoIdx === idx) { salirEdicion(); detailCard.classList.add('hidden'); document.getElementById('productForm').reset(); }
+        else if (idx < editandoIdx) editandoIdx--;
+    }
     localStorage.setItem('misConteos', JSON.stringify(conteosEfectuados));
     actualizarVista();
 });
@@ -841,6 +915,8 @@ document.getElementById('newCountButton').onclick = () => {
     if(confirm("¿Limpiar todo?")) {
         localStorage.removeItem('misConteos');
         conteosEfectuados = [];
+        salirEdicion();
+        detailCard.classList.add('hidden');
         proveedorActivo = null;
         actualizarProveedorUI();
         actualizarVista();
