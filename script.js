@@ -928,7 +928,7 @@ actualizarVista();
 // Si cambiás APP_VERSION, cambiá también el "?v=" de script.js en index.html: el aviso compara los dos.
 // Consultar necesita conexión; sin conexión no hace nada y se sigue trabajando normal (los conteos están en el celular).
 // ============================
-const APP_VERSION = '1.16';
+const APP_VERSION = '1.17';
 (function mostrarVersion() {
     const h = document.querySelector('.app-header h1');
     if (h) h.insertAdjacentHTML('beforeend', ` <small class="app-version">v${APP_VERSION}</small>`);
@@ -960,3 +960,54 @@ function mostrarAvisoActualizacion(version) {
 buscarActualizacion();
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') buscarActualizacion(); });
 window.addEventListener('online', buscarActualizacion);
+
+// ============================
+// Ventana de "Novedades": avisa qué cambió cada vez que se actualiza la app (mismo criterio que CobroSync).
+// Lista escrita a mano: se agrega una entrada nueva por cada versión que tenga algo para contarle a quien cuenta.
+// El "visto hasta" se guarda en el celular, así que cada uno la ve una sola vez.
+// ============================
+const CHANGELOG = [
+    { version: '1.13', fecha: '12/11/2026', items: ['El catálogo de productos se actualizó igual que Gescom: 581 productos, con las unidades por bulto de 611.'] },
+    { version: '1.14', fecha: '12/11/2026', items: ['Ahora podés corregir cada carga con el botón "Editar" (bultos, unidades sueltas y vencimiento). Funciona sin conexión.'] },
+    { version: '1.15', fecha: '12/11/2026', items: ['Las cargas se ven en tarjetas más chicas: entran 3 por pantalla y la última queda arriba.', 'Si hay una versión nueva de COUNT, aparece un aviso con el botón "Actualizar". Tus conteos no se pierden.'] },
+    { version: '1.16', fecha: '12/11/2026', items: ['Pantalla más limpia: los paneles de búsqueda y de datos del producto aparecen solo cuando los necesitás.'] },
+    { version: '1.17', fecha: '12/11/2026', items: ['Nuevo: esta ventana te cuenta qué cambió cada vez que COUNT se actualiza.'] },
+];
+const LS_NOVEDADES_VISTAS = 'count_novedades_vistas_v1';
+const MAX_NOVEDADES_VISIBLES = 4;
+
+function compararVersiones(a, b) {
+    const pa = String(a).split('.').map(Number), pb = String(b).split('.').map(Number);
+    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+        const d = (pa[i] || 0) - (pb[i] || 0);
+        if (d !== 0) return d;
+    }
+    return 0;
+}
+
+function novedadesPendientes(vistoHasta) {
+    const nuevas = CHANGELOG.filter((e) => !vistoHasta || compararVersiones(e.version, vistoHasta) > 0);
+    return nuevas.slice(-MAX_NOVEDADES_VISIBLES).reverse();
+}
+
+function mostrarNovedades() {
+    let visto = null;
+    try { visto = localStorage.getItem(LS_NOVEDADES_VISTAS); } catch (_) { /* sin almacenamiento: se muestra igual */ }
+    const pendientes = novedadesPendientes(visto);
+    if (pendientes.length === 0 || document.getElementById('modalNovedades')) return;
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const lista = pendientes.map((e) => `<div class="nov-version"><strong>Versión ${e.version}</strong><ul>${e.items.map((t) => `<li>${esc(t)}</li>`).join('')}</ul></div>`).join('');
+    const m = document.createElement('div');
+    m.id = 'modalNovedades';
+    m.setAttribute('role', 'dialog');
+    m.setAttribute('aria-modal', 'true');
+    m.setAttribute('aria-labelledby', 'novTitulo');
+    m.innerHTML = `<div class="nov-card"><h2 id="novTitulo">Novedades de COUNT</h2><div class="nov-body">${lista}</div><button type="button" id="btnNovedadesOk">Entendido</button></div>`;
+    document.body.appendChild(m);
+    document.getElementById('btnNovedadesOk').onclick = () => {
+        try { localStorage.setItem(LS_NOVEDADES_VISTAS, CHANGELOG[CHANGELOG.length - 1].version); } catch (_) { /* nada */ }
+        m.remove();
+    };
+}
+
+mostrarNovedades();
