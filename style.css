@@ -318,20 +318,31 @@ button:focus-visible {
   color: #ffffff;
 }
 
-/* Guardar y exportar: acción de cierre/éxito del conteo */
+/* Guardar: acción principal del conteo (azul), con el contador de cargados */
 #exportButton {
-  background: var(--field-green);
+  background: var(--ledger-ink);
   color: #ffffff;
 }
 #exportButton:disabled {
-  background: var(--ledger-line);
-  color: var(--ledger-ink-soft);
+  background: #c9ccd6;
+  color: #ffffff;
+  box-shadow: none;
+}
+#exportButton .n {
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 20px;
+  background: var(--route-terracotta);
+  font-family: 'JetBrains Mono', ui-monospace, 'Courier New', monospace;
+  font-weight: 700;
 }
 
-/* Nuevo Conteo: descarta el conteo actual */
+/* Nuevo Conteo: descarta el conteo actual. De contorno, discreto, para no tocarlo sin querer */
 .warning-button {
-  background: var(--route-red);
-  color: #ffffff;
+  background: transparent;
+  color: var(--ledger-ink-soft);
+  border: 1.5px solid var(--ledger-line);
+  box-shadow: none !important;
 }
 
 #cancelEditButton {
@@ -402,3 +413,38 @@ button:focus-visible {
 #btnNovedadesOk { background: var(--ledger-ink); color: #ffffff; margin-top: 10px; padding: 14px; font-size: 1rem; }
 
 .hidden { display: none; }
+
+/* --- PANTALLA INICIAL: ELEGIR PROVEEDOR --- */
+.inicio { margin-bottom: 20px; }
+.hero { background: var(--field-paper); border: 1px solid var(--ledger-line); border-radius: 14px; padding: 16px; }
+.hero-title { font-size: 1.45rem; font-weight: 800; line-height: 1.15; color: var(--ledger-ink); margin-bottom: 4px; }
+.hero p { margin: 0 0 12px; font-size: 0.85rem; color: var(--ledger-ink-soft); }
+.pasos { display: flex; gap: 6px; }
+.paso { flex: 1; display: flex; align-items: center; gap: 6px; font-size: 0.7rem; line-height: 1.15; color: var(--ledger-ink-soft); }
+.paso i { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 0.75rem; background: var(--ledger-line); color: var(--ledger-ink-soft); }
+.paso.on { color: var(--ledger-ink); font-weight: 700; }
+.paso.on i { background: var(--route-terracotta); color: #ffffff; }
+.paso.done i { background: var(--field-green); color: #ffffff; }
+.pasos-banner { margin: 0 0 12px; }
+.prov-filtro { width: 100%; margin-top: 12px; padding: 12px 14px; font-size: 1rem; border: 1.5px solid var(--ledger-line); border-radius: 11px; background: #ffffff; color: var(--ledger-ink); }
+.sec-title { display: flex; justify-content: space-between; margin: 14px 2px 6px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ledger-ink-soft); }
+.prov-lista { display: flex; flex-direction: column; gap: 7px; }
+.prov-lista .prov { width: 100%; margin: 0; padding: 12px 13px; min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: 8px; text-align: left; text-transform: none; font-size: 0.92rem; font-weight: 600; background: #ffffff; color: var(--ledger-ink); border: 1.5px solid var(--ledger-line); border-radius: 11px; }
+.prov-lista .prov:active { border-color: var(--route-terracotta); }
+.prov-lista .prov .c { flex: none; padding: 2px 8px; border-radius: 12px; background: var(--field-paper); color: var(--ledger-ink-soft); font-family: 'JetBrains Mono', ui-monospace, 'Courier New', monospace; font-size: 0.72rem; font-weight: 500; }
+
+/* --- BANNER DEL PROVEEDOR ELEGIDO --- */
+.banner-prov { margin: 0 0 12px; padding: 14px 16px; border-radius: 14px; background: var(--ledger-ink); color: #ffffff; }
+.banner-prov small { display: block; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.7; }
+.banner-prov b { display: block; margin: 3px 0 4px; font-size: 1.4rem; line-height: 1.15; word-break: break-word; }
+.banner-prov em { font-style: normal; font-size: 0.72rem; opacity: 0.75; }
+
+/* --- ESTADO VACÍO --- */
+.hint { margin-top: 4px; padding: 16px; border: 1.5px dashed var(--ledger-line); border-radius: 12px; text-align: center; font-size: 0.84rem; color: var(--ledger-ink-soft); }
+.hint b { color: var(--ledger-ink); }
+
+/* Título del header: puede partirse en dos líneas en vez de cortarse con puntos */
+.app-header h1 { white-space: normal; line-height: 1.1; overflow: visible; text-overflow: clip; }
+
+/* Lo oculto gana siempre, aunque otra regla le ponga display */
+.hidden { display: none !important; }

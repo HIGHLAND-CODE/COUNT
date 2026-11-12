@@ -592,38 +592,90 @@ let conteosEfectuados = JSON.parse(localStorage.getItem('misConteos')) || [];
 // ============================
 let proveedorActivo = (conteosEfectuados.length > 0 && conteosEfectuados[0].proveedor) ? conteosEfectuados[0].proveedor : null;
 
-// UI: muestra el proveedor activo en pantalla
+// ============================
+// Proveedor del conteo: se elige al empezar (pantalla inicial) y queda fijo hasta "Nuevo".
+// ============================
+const LS_PROV = 'count_proveedor_elegido_v1';
+function leerProvElegido() { try { return localStorage.getItem(LS_PROV) || null; } catch (_) { return null; } }
+function guardarProvElegido(p) { try { if (p) localStorage.setItem(LS_PROV, p); else localStorage.removeItem(LS_PROV); } catch (_) { /* sin almacenamiento: sigue funcionando */ } }
+const escHtml = (t) => String(t == null ? '' : t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+if (!proveedorActivo) {
+    const elegido = leerProvElegido();
+    if (elegido && productos.some((p) => p.proveedor === elegido)) proveedorActivo = elegido;
+}
+
 function asegurarBarraProveedor() {
     let el = document.getElementById('proveedorActivo');
     if (!el) {
-        const header = document.querySelector('main .app-header') || document.querySelector('main h1');
         el = document.createElement('div');
         el.id = 'proveedorActivo';
-        el.style.margin = '10px 0 16px';
-        el.style.padding = '10px 12px';
-        el.style.borderRadius = '10px';
-        el.style.border = '1px solid #E2E0D8';
-        el.style.background = '#F6F5F1';
-        el.style.color = '#14213D';
-        el.style.fontFamily = "'JetBrains Mono', ui-monospace, 'Courier New', monospace";
-        el.style.fontSize = '0.95rem';
-        if (header && header.parentNode) {
-            header.parentNode.insertBefore(el, header.nextSibling);
-        } else {
-            document.body.insertBefore(el, document.body.firstChild);
-        }
+        el.className = 'banner-prov';
+        const ref = document.getElementById('panelInicio');
+        ref.parentNode.insertBefore(el, ref);
     }
     return el;
 }
 
-function actualizarProveedorUI() {
-    const el = asegurarBarraProveedor();
-    if (!proveedorActivo) {
-        el.innerHTML = '<strong>Proveedor activo:</strong> <span style="color:#3D4A6B">(no seleccionado aún)</span>';
-    } else {
-        el.innerHTML = `<strong>Proveedor activo:</strong> <span style="color:#C8552D;font-weight:700">${proveedorActivo}</span> <span style="color:#3D4A6B">(bloqueado hasta "Nuevo Conteo")</span>`;
-    }
+function dibujarPasos() {
+    const detalleAbierto = typeof detailCard !== 'undefined' && detailCard && !detailCard.classList.contains('hidden');
+    const actual = !proveedorActivo ? 1 : (detalleAbierto ? 3 : 2);
+    const nombres = ['Proveedor', 'Producto', 'Cantidad'];
+    const html = nombres.map((n, i) => {
+        const num = i + 1;
+        const cls = num < actual ? 'done' : (num === actual ? 'on' : '');
+        return '<div class="paso ' + cls + '"><i>' + (num < actual ? '✓' : num) + '</i>' + n + '</div>';
+    }).join('');
+    ['pasosInicio', 'pasosBanner'].forEach((id) => { const e = document.getElementById(id); if (e) e.innerHTML = html; });
 }
+
+function construirListaProveedores() {
+    const lista = document.getElementById('provLista');
+    if (!lista) return;
+    const cuenta = {};
+    productos.forEach((p) => { if (p.proveedor) cuenta[p.proveedor] = (cuenta[p.proveedor] || 0) + 1; });
+    const filtro = (document.getElementById('provFiltro').value || '').toLowerCase();
+    const nombres = Object.keys(cuenta).filter((n) => n.toLowerCase().includes(filtro)).sort((a, b) => a.localeCompare(b, 'es'));
+    lista.innerHTML = nombres.map((n) => '<button type="button" class="prov" data-prov="' + escHtml(n) + '"><span>' + escHtml(n) + '</span><span class="c">' + cuenta[n] + '</span></button>').join('') || '<div class="hint">Ningún proveedor coincide.</div>';
+    document.getElementById('provCantidad').textContent = nombres.length;
+}
+
+function elegirProveedor(nombre) {
+    proveedorActivo = nombre;
+    guardarProvElegido(nombre);
+    actualizarProveedorUI();
+    window.scrollTo(0, 0);
+    const b = document.getElementById('searchInput');
+    if (b) b.focus();
+}
+
+function actualizarProveedorUI() {
+    const banner = asegurarBarraProveedor();
+    const hay = !!proveedorActivo;
+    document.getElementById('panelInicio').classList.toggle('hidden', hay);
+    banner.classList.toggle('hidden', !hay);
+    const buscar = document.querySelector('.search-section');
+    const sesion = document.querySelector('.session-section');
+    const pasosBanner = document.getElementById('pasosBanner');
+    if (buscar) buscar.classList.toggle('hidden', !hay);
+    if (sesion) sesion.classList.toggle('hidden', !hay);
+    if (pasosBanner) pasosBanner.classList.toggle('hidden', !hay);
+    if (hay) {
+        const total = productos.filter((p) => p.proveedor === proveedorActivo).length;
+        const n = conteosEfectuados.length;
+        const detalle = n ? n + ' cargado' + (n === 1 ? '' : 's') + ' de ' + total + ' productos' : total + ' productos · para cambiar de proveedor, tocá Nuevo';
+        banner.innerHTML = '<small>Contando a</small><b>' + escHtml(proveedorActivo) + '</b><em>' + detalle + '</em>';
+    } else {
+        construirListaProveedores();
+    }
+    dibujarPasos();
+}
+
+document.getElementById('provLista').addEventListener('click', (e) => {
+    const b = e.target.closest('.prov');
+    if (b) elegirProveedor(b.dataset.prov);
+});
+document.getElementById('provFiltro').addEventListener('input', construirListaProveedores);
 
 
 const searchInput = document.getElementById('searchInput');
@@ -647,6 +699,7 @@ const addEntryButton = document.getElementById('addEntryButton');
 const listSection = document.querySelector('.product-list-section');
 const detailSection = document.querySelector('.detail-section');
 function sincronizarPaneles() {
+    dibujarPasos();
     if (detailSection) detailSection.classList.toggle('hidden', detailCard.classList.contains('hidden'));
 }
 new MutationObserver(sincronizarPaneles).observe(detailCard, { attributes: true, attributeFilter: ['class'] });
@@ -832,8 +885,11 @@ function formatFecha(iso) {
 }
 
 function actualizarVista() {
+    actualizarProveedorUI();
+    const nCargados = conteosEfectuados.length;
+    exportButton.innerHTML = 'Guardar' + (nCargados ? '<span class="n">' + nCargados + '</span>' : '');
     if (conteosEfectuados.length === 0) {
-        sessionEntries.innerHTML = "Sin datos.";
+        sessionEntries.innerHTML = '<div class="hint"><b>Todavía no cargaste nada.</b><br>Escribí arriba para encontrar un producto.</div>';
         exportButton.disabled = true;
         return;
     }
@@ -908,8 +964,9 @@ exportButton.onclick = () => {
 };
 
 document.getElementById('newCountButton').onclick = () => {
-    if(confirm("¿Limpiar todo?")) {
+    if (conteosEfectuados.length === 0 || confirm("¿Limpiar todo?")) {
         localStorage.removeItem('misConteos');
+        guardarProvElegido(null);
         conteosEfectuados = [];
         salirEdicion();
         detailCard.classList.add('hidden');
@@ -928,7 +985,7 @@ actualizarVista();
 // Si cambiás APP_VERSION, cambiá también el "?v=" de script.js en index.html: el aviso compara los dos.
 // Consultar necesita conexión; sin conexión no hace nada y se sigue trabajando normal (los conteos están en el celular).
 // ============================
-const APP_VERSION = '1.17';
+const APP_VERSION = '1.18';
 (function mostrarVersion() {
     const h = document.querySelector('.app-header h1');
     if (h) h.insertAdjacentHTML('beforeend', ` <small class="app-version">v${APP_VERSION}</small>`);
@@ -972,6 +1029,7 @@ const CHANGELOG = [
     { version: '1.15', fecha: '12/11/2026', items: ['Las cargas se ven en tarjetas más chicas: entran 3 por pantalla y la última queda arriba.', 'Si hay una versión nueva de COUNT, aparece un aviso con el botón "Actualizar". Tus conteos no se pierden.'] },
     { version: '1.16', fecha: '12/11/2026', items: ['Pantalla más limpia: los paneles de búsqueda y de datos del producto aparecen solo cuando los necesitás.'] },
     { version: '1.17', fecha: '12/11/2026', items: ['Nuevo: esta ventana te cuenta qué cambió cada vez que COUNT se actualiza.'] },
+    { version: '1.18', fecha: '12/11/2026', items: ['Pantalla de inicio nueva: primero elegís el proveedor y después buscás y cargás los productos.', 'El proveedor se ve grande arriba mientras contás, con cuántos productos cargaste.', '"Guardar" es ahora el botón principal y muestra cuántos productos cargaste. "Nuevo" quedó más discreto.'] },
 ];
 const LS_NOVEDADES_VISTAS = 'count_novedades_vistas_v1';
 const MAX_NOVEDADES_VISIBLES = 4;

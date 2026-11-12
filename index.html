@@ -9,10 +9,13 @@
 <meta http-equiv="Pragma" content="no-cache">
 
 <title>Conteo de Productos</title>
+<link rel="icon" type="image/png" sizes="400x400" href="icon.png?v=1">
+<link rel="apple-touch-icon" href="icon.png?v=1">
+<meta name="theme-color" content="#14213D">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=1.4" />
+<link rel="stylesheet" href="style.css?v=1.6" />
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -26,6 +29,19 @@
 </header>
 
 <div id="cronometro" style="display:none;"></div>
+
+<div id="panelInicio" class="inicio">
+<div class="hero">
+<div class="hero-title">Empecemos un conteo</div>
+<p>Elegí el proveedor que vas a contar. Después buscás cada producto y cargás lo que hay.</p>
+<div id="pasosInicio" class="pasos"></div>
+</div>
+<input id="provFiltro" class="prov-filtro" type="search" placeholder="Buscar proveedor..." autocomplete="off" />
+<div class="sec-title"><span>Proveedores</span><span id="provCantidad"></span></div>
+<div id="provLista" class="prov-lista"></div>
+</div>
+
+<div id="pasosBanner" class="pasos pasos-banner"></div>
 
 <section class="search-section">
 <label for="searchInput">Buscar producto (Nombre o Código):</label>
@@ -61,6 +77,6 @@
 </section>
 </main>
 
-<script src="script.js?v=1.17"></script>
+<script src="script.js?v=1.18"></script>
 </body>
 </html>
