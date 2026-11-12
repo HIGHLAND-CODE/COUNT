@@ -643,6 +643,16 @@ const inputFecha = document.getElementById('fechaVencimiento');
 let editandoIdx = null;
 const addEntryButton = document.getElementById('addEntryButton');
 
+// Paneles que solo se ven cuando hacen falta (en el celular los vacíos ocupaban una pantalla entera)
+const listSection = document.querySelector('.product-list-section');
+const detailSection = document.querySelector('.detail-section');
+function sincronizarPaneles() {
+    if (detailSection) detailSection.classList.toggle('hidden', detailCard.classList.contains('hidden'));
+}
+new MutationObserver(sincronizarPaneles).observe(detailCard, { attributes: true, attributeFilter: ['class'] });
+if (listSection) listSection.classList.add('hidden');
+sincronizarPaneles();
+
 function salirEdicion() {
     editandoIdx = null;
     addEntryButton.textContent = 'Agregar producto';
@@ -684,6 +694,7 @@ function entrarEdicion(idx) {
 // 1. BUSCADOR
 searchInput.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
+    if (listSection) listSection.classList.toggle('hidden', term.length < 2);
     if (term.length < 2) {
         productList.innerHTML = "Escriba para buscar...";
         return;
@@ -710,6 +721,7 @@ searchInput.addEventListener('input', (e) => {
         div.innerHTML = `<span class="product-code">${p.codigo}</span><span class="product-desc">${p.descripcion}</span><span class="u-x-b">[UxB: ${p.unidades_x_bulto}]</span>`;
         div.onclick = () => {
             salirEdicion();
+            if (listSection) listSection.classList.add('hidden');
             selectedProductName.textContent = p.descripcion;
             selectedProductName.dataset.codigo = p.codigo;
             selectedProductName.dataset.uxb = p.unidades_x_bulto;
@@ -916,7 +928,7 @@ actualizarVista();
 // Si cambiás APP_VERSION, cambiá también el "?v=" de script.js en index.html: el aviso compara los dos.
 // Consultar necesita conexión; sin conexión no hace nada y se sigue trabajando normal (los conteos están en el celular).
 // ============================
-const APP_VERSION = '1.15';
+const APP_VERSION = '1.16';
 (function mostrarVersion() {
     const h = document.querySelector('.app-header h1');
     if (h) h.insertAdjacentHTML('beforeend', ` <small class="app-version">v${APP_VERSION}</small>`);
