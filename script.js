@@ -552,6 +552,7 @@ const productos = [
   {"codigo":"300058721","descripcion":"PEP RAMITAS QUESO 84GX36","unidades_x_bulto":36,"proveedor":"Pepsico de Argentina SRL"},
   {"codigo":"300052756","descripcion":"PEP RUEDITAS 120GRX21","unidades_x_bulto":21,"proveedor":"Pepsico de Argentina SRL"},
   {"codigo":"300033489","descripcion":"PEP RUEDITAS 40GX60 PI","unidades_x_bulto":60,"proveedor":"Pepsico de Argentina SRL"},
+  {"codigo":"300067771","descripcion":"PEP RAMITAS QUESO 84GX30 ","unidades_x_bulto":30,"proveedor":"Pepsico de Argentina SRL"},
   {"codigo":"300052757","descripcion":"PEP RUEDITAS 74GRX36","unidades_x_bulto":36,"proveedor":"Pepsico de Argentina SRL"},
   {"codigo":"300065501","descripcion":"PEP RUEDITAS FLAMIN HOT 71G","unidades_x_bulto":36,"proveedor":"Pepsico de Argentina SRL"},
   {"codigo":"1500011852","descripcion":"POF 3T65 SAV","unidades_x_bulto":1,"proveedor":"Pepsico de Argentina SRL"},
